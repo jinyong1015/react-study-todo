@@ -1,67 +1,31 @@
-import React, { Component } from 'react'
+import React, {useState} from 'react'
 import "./App.css";
+import List from './components/List';
+import Form from './components/Form';
   
-export default class App extends Component {
+export default function App() {
 
-  state = {
-    todoData : [],
-    value: "",
-  }
-
-  btnStyle = {
-    color: "#fff",
-    border: "none",
-    padding: "5px 9px",
-    borderRadius: "50%",
-    cursor: "pointer",
-    float: "right",
-  };
-
-  getStyle = (completed) => {
-    return {
-      padding: "10px",
-      borderBottom: "1px #ccc dotted",
-      textDecoration: completed ? "line-through" : "none",
-    }
-  }
-
+  const [todoData, setTodoData] = useState([]);
+  const [value, setValue] = useState("");
   
-  handleClick = (id) => {
-    let newTodoData = this.state.todoData.filter(data => data.id !== id);
-    console.log('newTodoData', newTodoData);
-    this.setState({todoData: newTodoData});
-  }
-
-  handleChange = (e) => {
-    this.setState({value: e.target.value});
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     // form 안에 input을 전송할 때 페이지 리로드 되는 걸 막아줌
     e.preventDefault();
 
     // 새로운 할 일 데이터 
     let newTodo = {
       id: Date.now(),
-      title : this.state.value,
+      title : value,
       completed: false,
     };
 
     // 원래 있던 할 일에 새로운 할 일 더해주기
-    this.setState({ todoData: [...this.state.todoData, newTodo], value: ""});
+    // value : ""로 입력 후 value 값 초기화 하기
+    setTodoData(prev => [...prev, newTodo])
+    setValue("");
     console.log('newTodo', newTodo);
   };
 
-    handleCompleteChange = (id) => {
-      let newTodoData = this.state.todoData.map(data => {
-        if(data.id === id) {
-          data.completed = !data.completed;
-        }
-        return data;
-      })
-      this.setState({ todoData: newTodoData});
-    }
-  render() {
     return (
       <div className="container">
         <div className='todoBlock'>
@@ -69,32 +33,11 @@ export default class App extends Component {
             <h1> 할 일 목록 </h1>
           </div>
 
-    {this.state.todoData.map(data => (
-      <div style={this.getStyle(data.completed)} key={data.id}>
-      <input type="checkbox" defaultChecked={false} onChange={() => this.handleCompleteChange(data.id)}/>
-      {" "}{data.title}
-      <button style={this.btnStyle} onClick={() => this.handleClick(data.id)}>x</button>
-      </div>
-    ))}
-
-      <form style = {{display: 'flex'}} onSubmit={this.handleSubmit}>
-        <input 
-          type='text'
-          name='value'
-          style={{flex: '10', padding: '5px'}}
-          placeholder='해야 할 일을 입력하세요.'
-          value={this.state.value}
-          onChange={this.handleChange} />
-        <input
-          type = "submit"
-          value = "입력"
-          className = "btn"
-          style={{flex: '1'}} />
-      </form>
-        
+      <List todoData={todoData} setTodoData={setTodoData}/>
+      <Form handleSubmit={handleSubmit} value={value} setValue={setValue} />
+    
         </div>
       </div>
     )
-  }
 }
 
