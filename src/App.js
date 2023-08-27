@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import "./App.css";
-import List from './components/List';
 import Form from './components/Form';
+import Lists from './components/Lists';
   
 export default function App() {
 
@@ -32,7 +32,7 @@ export default function App() {
           <div className='flex justify-between mb-3'>
             <h1> 할 일 목록 </h1>
           </div>
-      <List todoData={todoData} setTodoData={setTodoData}/>
+      <Lists todoData={todoData} setTodoData={setTodoData}/>
       <Form handleSubmit={handleSubmit} value={value} setValue={setValue} />
     
         </div>
